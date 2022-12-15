@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { Container } from "./App.styles";
+import { Slider } from "./components/Slider";
+import { useState } from "react";
+import MapChart from "./components/MapChart";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 function App() {
+  const [anchorId, setAnchorId] = useState("");
+  const [content, setContent] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload. teste
-        </p>
-        <a  
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Slider />
+      <MapChart
+        setAnchorId={setAnchorId}
+        setTooltipContent={setContent}
+        setIsOpen={setIsOpen}
+        isOpen={isOpen}
+      />
+      <ReactTooltip
+        anchorId={anchorId}
+        content={content}
+        isOpen={isOpen}
+      />
+    </Container>
   );
 }
 

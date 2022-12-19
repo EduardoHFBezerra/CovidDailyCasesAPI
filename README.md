@@ -2,7 +2,7 @@
 Fullstack Challenge 🏅 2022 - Covid Daily Cases
 >  This is a challenge by [Coodesh](https://coodesh.com/)
 
-Desafio da Coodesh onde foi desenvolvida uma API para consumir os dados de Covid cadastrados no banco de dados.
+Desafio da Coodesh onde foi desenvolvida uma API para consumir os dados de Covid por país, data, e variante cadastrados no banco de dados.
 
 ![Captura de Tela 2022-12-19 às 16 45 09](https://user-images.githubusercontent.com/107374370/208507503-91c9b373-fb4e-4788-b7d9-c482e2a77b38.png)
 

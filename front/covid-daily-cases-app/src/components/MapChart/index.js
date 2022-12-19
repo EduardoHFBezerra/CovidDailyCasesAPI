@@ -7,8 +7,21 @@ import {
   Graticule,
   Sphere,
 } from "react-simple-maps";
+import api from './../../api/cases';
+import { useState, useEffect } from "react";
 
 const MapChart = (props) => {
+  const [cases, setCases] = useState([]);
+  const [content, setTooltipContent] = useState("");
+
+  useEffect(() => {
+    const getCases = async () => {
+      const responseCases = await api.get(`cases/${props.dates[props.range]}/${props.count}`);
+      setCases(responseCases.data);
+    }
+    getCases();
+  }, [props]);
+
   return (
     <Container>
       <ComposableMap>
@@ -25,11 +38,28 @@ const MapChart = (props) => {
                 key={geo.rsmKey}
                 geography={geo}
                 id={geo.id}
+                data-tooltip-html={content}
                 onMouseEnter={() => {
                   props.setAnchorId(geo.id);
-                  props.setTooltipContent(`${geo.properties.name}`);
-                  if (!props.isOpen) {
-                    props.setIsOpen(true);
+                  if (cases.length !== 0)
+                  {
+                    const casesFilter = cases.filter(element => geo.properties.name.indexOf(element.location) > -1);
+                    const casesMap = casesFilter.map(function(item, index)
+                    {
+                      return `${item.variant}: ${item.numSequences}`;
+                    }).join("<br />");
+
+                    if (casesMap.length !== 0) {
+                      setTooltipContent(`
+                        <strong>${geo.properties.name}:</strong>
+                        <div class="content-tooltip">${casesMap}</div>
+                      `);
+                    } else {
+                      setTooltipContent("Nenhum dado deste país para a data selecionada");
+                    }
+                    if (!props.isOpen) {
+                      props.setIsOpen(true);
+                    }
                   }
                 }}
                 style={{

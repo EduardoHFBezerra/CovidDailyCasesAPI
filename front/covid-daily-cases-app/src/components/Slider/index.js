@@ -1,30 +1,31 @@
-import { useState } from "react";
 import { Container, Header } from "./styles";
 import RangeSlider from 'react-bootstrap-range-slider';
+import { useEffect } from "react";
+import api from './../../api/cases';
 
-const convertToDate = (date) => {
-  return new Date(parseInt(date,10)).toLocaleDateString("pt-BR");
-};
+export const Slider = (props) => {
 
-export const Slider = () => {
-  const initDate = new Date("2017, 02, 01").getTime();
-  const endDate = new Date("2019, 12, 31").getTime();
-  const [range, setRange] = useState(initDate);
+  useEffect(() => {
+    const getDates = async () => {
+      const responseDates = await api.get(`dates`);
+      props.setDates(responseDates.data);
+    }
+    getDates();
+  }, [props]);
   
   const handleChange = (e) => {
-    setRange(e.target.value);
+    props.setRange(e.target.value);
   };
 
   return (
     <Container>
       <Header>Covid Daily Cases</Header>
       <RangeSlider
-        min={initDate}
-        max={endDate}
-        value={range}
-        step={86400000}
+        min={0}
+        max={props.dates.length-1}
+        value={props.range}
         onChange={handleChange}
-        tooltipLabel={currentValue => `${convertToDate(currentValue)}`}
+        tooltipLabel={currentValue => `${props.dates[currentValue]}`}
         tooltipPlacement='top'
         tooltip='on'
         variant='info'

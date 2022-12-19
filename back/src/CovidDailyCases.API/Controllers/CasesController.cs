@@ -24,44 +24,38 @@ namespace CovidDailyCases.API.Controllers
         }
         
         [HttpGet("{date}/count")]
-        public IEnumerable<Cases> GetAll(DateOnly date)
+        public IEnumerable<Cases> GetCasesGroupsByDate(DateOnly date)
         {
             return _context.cases
-                .AsEnumerable()
                 .Where(x => x.Date == date)
-                .GroupBy(x => (x.Location, x.Variant))
-                .SelectMany(g => g);
+                .GroupBy(x => new { x.Location, x.Variant })
+                .Select(g => new Cases
+                {
+                    Location = g.Key.Location,
+                    Variant = g.Key.Variant,
+                    numSequences = g.Sum(x => x.numSequences)
+                });
         }
         
         [HttpGet("{date}/cumulative")]
-        public IEnumerable<Cases> GetAllCumulative(DateOnly date)
+        public IEnumerable<Cases> GetCumulativeCasesByDate(DateOnly date)
         {
             return _context.cases
-                .Join(
-                _context.cases,
-                a => new { a.Location, a.Variant },
-                    b => new { b.Location, b.Variant },
-                (a, b) => new
+                .Where(x => x.Date <= date)
+                .GroupBy(x => new {x.Location, x.Variant})
+                .Select(g => new Cases
                 {
-                    a,
-                    b
-                }
-            )
-            .Where(x => x.a.Date == date && x.b.Date <= date)
-            .GroupBy(x => new { x.a.Location, x.a.Variant })
-            .Select(g => new Cases
-            {
-                Location = g.Key.Location,
-                Variant = g.Key.Variant,
-                numSequences = g.Sum(x => x.b.numSequences)
-            });
+                    Location = g.Key.Location,
+                    Variant = g.Key.Variant,
+                    numSequences = g.Sum(x => x.numSequences)
+                });
         }
 
         [HttpGet("/dates")]
         public IEnumerable<DateOnly> GetDates()
         {
             var dates = (from d in _context.cases
-                        select d.Date).Distinct();
+                        select d.Date).Distinct().OrderBy(d => d);
             return dates;
         }
     }

@@ -15,8 +15,6 @@ namespace CovidDailyCases.API.Data.Migrations
                 name: "cases",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
                     Location = table.Column<string>(type: "TEXT", nullable: true),
                     Date = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     Variant = table.Column<string>(type: "TEXT", nullable: true),
@@ -26,7 +24,7 @@ namespace CovidDailyCases.API.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_cases", x => x.Id);
+                    table.PrimaryKey("PK_cases", x => x.Location);
                 });
         }
 

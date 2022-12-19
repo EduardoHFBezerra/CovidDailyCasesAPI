@@ -22,10 +22,6 @@ namespace CovidDailyCases.API.Data.Migrations
 
             modelBuilder.Entity("CovidDailyCases.API.Models.Cases", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateOnly>("Date")
                         .HasColumnType("TEXT");
 
@@ -44,7 +40,7 @@ namespace CovidDailyCases.API.Data.Migrations
                     b.Property<decimal>("percSequences")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("Location");
 
                     b.ToTable("cases");
                 });

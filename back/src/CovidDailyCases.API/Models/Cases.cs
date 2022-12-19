@@ -8,7 +8,7 @@ namespace CovidDailyCases.API.Models
 {
     public class Cases
     {
-        public int Id { get; set; }
+        [Key]
         public string? Location { get; set; }
         public DateOnly Date { get; set; }
         public string? Variant { get; set; }
